@@ -457,9 +457,18 @@ b, strong { font-weight: 700 }
    7. Pied de page
    --------------------------------------------------------------------- */
 .site-f { margin-top: clamp(90px, 11vw, 150px); padding: 0 0 36px; border-top: 1px solid var(--line); color: var(--muted); font-size: 15px; overflow: hidden }
-/* Nom géant : plus visible, un trait de lumière le balaie quand il
-   apparaît (une seule fois) et de nouveau au survol */
+/* Nom géant : il reste fixe. Au survol, un halo blanc apparaît dans les
+   lettres et suit la souris (position --x / --y posée par main.js,
+   taille --halo qui grandit en douceur) */
+@property --halo {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
 .f-giant {
+  --x: 50%;
+  --y: 50%;
   margin: 0;
   padding: 28px 0 12px;
   color: #333;
@@ -468,19 +477,14 @@ b, strong { font-weight: 700 }
   letter-spacing: -.03em;
   text-transform: uppercase;
   white-space: nowrap;
-  background: linear-gradient(100deg, #333 0 44%, var(--text) 50%, #333 56% 100%) 0 0 / 250% 100% no-repeat;
+  background: radial-gradient(circle var(--halo) at var(--x) var(--y), var(--text), rgba(242, 240, 234, .35) 45%, #333 100%), #333;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  transition: background-position 1.4s var(--ease);
+  transition: --halo .5s var(--ease);
 }
 
-.f-giant:hover { background-position: 100% 0 }
-.js .f-giant:not(.vu) { opacity: 0 }
-.js .f-giant.vu { animation: geant-in 1s var(--ease) backwards, balayage 2.2s var(--ease) .3s backwards }
-
-@keyframes geant-in { from { opacity: 0; transform: translateY(30px) } }
-@keyframes balayage { from { background-position: 100% 0 } }
+.f-giant:hover { --halo: 220px }
 .f-row { display: grid; gap: 18px 40px; padding-top: 24px; border-top: 1px solid var(--line) }
 
 @media (min-width: 860px) {

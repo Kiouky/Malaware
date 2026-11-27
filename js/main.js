@@ -23,7 +23,7 @@ const REDUIT = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   // Apparitions au défilement : chaque élément .rv reçoit .vu quand il
   // entre à l’écran (le décalage vient de la variable CSS --i).
-  const aReveler = document.querySelectorAll(".rv, .f-giant");
+  const aReveler = document.querySelectorAll(".rv");
   if (REDUIT || !("IntersectionObserver" in window)) {
     aReveler.forEach((el) => el.classList.add("vu"));
   } else {
@@ -62,6 +62,16 @@ const REDUIT = matchMedia("(prefers-reduced-motion: reduce)").matches;
     hero.addEventListener("pointerleave", () => {
       art.style.setProperty("--mx", 0);
       art.style.setProperty("--my", 0);
+    });
+  }
+
+  // Nom géant du pied de page : le halo blanc suit la souris (--x, --y)
+  const geant = document.querySelector(".f-giant");
+  if (geant && matchMedia("(pointer: fine)").matches) {
+    geant.addEventListener("pointermove", (e) => {
+      const r = geant.getBoundingClientRect();
+      geant.style.setProperty("--x", Math.round(e.clientX - r.left) + "px");
+      geant.style.setProperty("--y", Math.round(e.clientY - r.top) + "px");
     });
   }
 })();
